@@ -197,6 +197,12 @@
         border: 2px solid #3a4060;
         flex-shrink: 0;
         background: #1a1f33;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+      .preview-thumb:hover {
+        transform: scale(1.05);
+        border-color: var(--panel-accent);
       }
 
       .preview-wrapper {
@@ -604,15 +610,39 @@
       <input type="text" placeholder="Nome científico, ex: Sporophila caerulescens"   id="e-cient-${i}"   value="${d.cientifico}" oninput="dados[${i}].cientifico=this.value">
       <input type="text" placeholder="Macho / Fêmea"     id="e-sexo-${i}"    value="${d.sexo}"       oninput="dados[${i}].sexo=this.value">
       <div class="url-col">
-        <input type="text" placeholder="URL da foto..."  id="e-foto-${i}"    value="${d.foto}"
+        <input type="text" placeholder="Cole a URL ou clique na imagem para upload..."  id="e-foto-${i}"    value="${d.foto}"
           oninput="dados[${i}].foto=this.value; atualizarPreview(${i})">
+        
+        <input type="file" id="file-foto-${i}" accept="image/*" style="display: none;" onchange="processarUpload(event, ${i})">
+        
         <img class="preview-thumb" id="prev-${i}"
           src="${d.foto || PLACEHOLDER}"
-          alt="preview"
+          alt="Clique para fazer upload"
+          title="Clique para fazer upload"
+          onclick="document.getElementById('file-foto-${i}').click()"
           onerror="this.src='${PLACEHOLDER}'">
       </div>
     </div>`;
         }
+      }
+
+      function processarUpload(event, i) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const base64Image = e.target.result;
+          
+          document.getElementById(`e-foto-${i}`).value = base64Image;
+          
+          dados[i].foto = base64Image;
+          
+          atualizarPreview(i);
+        };
+        
+        reader.readAsDataURL(file);
       }
 
       function atualizarPreview(i) {
@@ -677,6 +707,7 @@
         };
 
         localStorage.setItem("plaquinhasData", JSON.stringify(saveData));
+
         window.print();
       }
 
@@ -685,13 +716,12 @@
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
-          
+            
             if (parsed.globais) {
               document.getElementById("g-criador").value = parsed.globais.criador || "";
               document.getElementById("g-registro").value = parsed.globais.registro || "";
             }
-          
-
+            
             if (parsed.passaros && Array.isArray(parsed.passaros)) {
               for (let i = 0; i < NUM; i++) {
                 if (parsed.passaros[i]) {
