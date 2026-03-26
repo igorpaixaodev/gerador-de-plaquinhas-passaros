@@ -7,22 +7,23 @@ Este projeto nasceu de uma necessidade real de casa: meu pai é criador de páss
 
 ## ✨ Funcionalidades
 * **Preenchimento em Lote:** Defina o "Criador" e o "Registro" uma única vez e aplique a todos os cards simultaneamente.
-* **Personalização Individual:** Insira Nome, Anilha, Espécie (Nome Popular e Científico), Sexo e a URL da foto para cada pássaro.
-* **Auto-Salvamento:** Utiliza o `localStorage` do navegador para que você não perca os dados digitados caso feche a aba sem querer.
+* **Personalização Individual:** Insira Nome, Anilha, Espécie (Nome Popular e Científico) e Sexo para cada pássaro.
+* **Upload de Imagens Inteligente:** Adicione fotos colando um link (URL) da internet ou fazendo **upload direto do seu dispositivo** clicando no preview da imagem (as fotos são processadas em Base64).
+* **Auto-Salvamento:** Utiliza o `localStorage` do navegador para que você não perca os dados e as fotos enviadas caso feche a aba sem querer.
 * **Pronto para Impressão:** CSS configurado com `@media print` para remover os menus e renderizar a folha A4 exata (8 plaquinhas por folha), sem margens indesejadas.
-* **Mobile-Friendly:** Interface que se adapta a telas de celulares, transformando a tabela em cards empilhados para facilitar a digitação.
+* **Mobile-Friendly:** Interface que se adapta a telas de celulares, transformando a tabela em cards empilhados para facilitar a digitação e o envio de fotos direto da galeria do smartphone.
 
 ## 🚀 Como Usar
 1. Acesse a página do projeto via navegador (ou abra o arquivo `index.html` localmente).
 2. Preencha as **Informações Coletivas** no painel superior e clique no botão para aplicar a todas as placas.
-3. Insira as **Informações Individuais** de cada ave. Para as imagens, basta colar o link (URL) da foto desejada.
+3. Insira as **Informações Individuais** de cada ave. Para adicionar a foto, você pode colar a URL no campo de texto ou **clicar no preview da imagem** para escolher um arquivo do seu computador/celular.
 4. Clique em **Imprimir / Salvar PDF**. 
-   * *Dica: Na tela de impressão do navegador, certifique-se de desmarcar a opção "Cabeçalhos e rodapés" (Headers and footers) para um acabamento perfeito.*
+   * *Dica: Na tela de impressão do navegador, certifique-se de desmarcar a opção "Cabeçalhos e rodapés" (Headers and footers) para um acabamento perfeito e sem bordas brancas sobressalentes.*
 
 ## 🛠️ Tecnologias Utilizadas
 * **HTML5** (Estrutura semântica)
 * **CSS3** (Flexbox, CSS Grid, responsividade e formatação de impressão em milímetros)
-* **JavaScript** (Vanilla JS para manipulação do DOM e persistência de dados local)
+* **JavaScript** (Vanilla JS para manipulação do DOM, FileReader para imagens em Base64 e persistência de dados local via LocalStorage)
 
 ---
-*Desenvolvido com ☕ para facilitar a vida dos criadores!*
+*Desenvolvido por Igor Soares da Paixão, para seu pai doido por pássaros.* ☕🐦
