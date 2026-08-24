@@ -134,7 +134,7 @@
 
       .col-headers {
         display: grid;
-        grid-template-columns: 24px 1.2fr 1fr 1fr 1fr 0.8fr 1.4fr;
+        grid-template-columns: 24px 1.2fr 1fr 1fr 1fr 0.8fr 0.9fr 1.4fr;
         gap: 6px;
         padding: 0 14px;
         margin-bottom: 4px;
@@ -151,7 +151,7 @@
         border-radius: 9px;
         padding: 10px 14px;
         display: grid;
-        grid-template-columns: 24px 1.2fr 1fr 1fr 1fr 0.8fr 1.4fr;
+        grid-template-columns: 24px 1.2fr 1fr 1fr 1fr 0.8fr 0.9fr 1.4fr;
         gap: 6px;
         align-items: center;
         border: 1.5px solid #2e3550;
@@ -347,6 +347,16 @@
         gap: 1.5px;
       }
 
+      .campo-linha-dupla {
+        display: flex;
+        gap: 3mm;
+        align-items: flex-end;
+      }
+      .campo-linha-dupla .campo-item {
+        flex: 1;
+        min-width: 0;
+      }
+
       .campo-header {
         display: flex;
         align-items: center;
@@ -359,6 +369,7 @@
         color: #111;
         text-transform: uppercase;
         line-height: 1;
+        white-space: nowrap;
       }
       .campo-label-line {
         flex: 1;
@@ -378,10 +389,8 @@
         display: flex;
         align-items: center;
         background: #fff;
-      }
-
-      .campo-item.registro .campo-box {
-        width: 50%;
+        overflow: hidden;
+        white-space: nowrap;
       }
 
       @media screen and (max-width: 768px) {
@@ -501,6 +510,7 @@
         <div class="col-header">Nome Popular</div>
         <div class="col-header">Nome Científico</div>
         <div class="col-header">Sexo</div>
+        <div class="col-header">Nascimento</div>
         <div class="col-header">URL Foto + Preview</div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 7px" id="editores"></div>
@@ -522,6 +532,7 @@
         popular: "",
         cientifico: "",
         sexo: "",
+        nascimento: "",
         foto: "",
       }));
 
@@ -582,12 +593,22 @@
             <div class="campo-box" id="f-anilha-${i}">${d.anilha}</div>
           </div>
 
-          <div class="campo-item">
-            <div class="campo-header">
-              <span class="campo-label-txt">REGISTRO</span>
-              <span class="campo-label-line"></span>
+          <div class="campo-linha-dupla">
+            <div class="campo-item">
+              <div class="campo-header">
+                <span class="campo-label-txt">REGISTRO</span>
+                <span class="campo-label-line"></span>
+              </div>
+              <div class="campo-box" id="f-registro-${i}"></div>
             </div>
-            <div class="campo-box" id="f-registro-${i}"></div>
+
+            <div class="campo-item">
+              <div class="campo-header">
+                <span class="campo-label-line"></span>
+                <span class="campo-label-txt">NASCIMENTO</span>
+              </div>
+              <div class="campo-box" id="f-nasc-${i}">${d.nascimento}</div>
+            </div>
           </div>
 
         </div>
@@ -609,6 +630,8 @@
       <input type="text" placeholder="Nome popular, ex: Coleiro, Baiano, Papa Capim"      id="e-popular-${i}" value="${d.popular}"    oninput="dados[${i}].popular=this.value">
       <input type="text" placeholder="Nome científico, ex: Sporophila caerulescens"   id="e-cient-${i}"   value="${d.cientifico}" oninput="dados[${i}].cientifico=this.value">
       <input type="text" placeholder="Macho / Fêmea"     id="e-sexo-${i}"    value="${d.sexo}"       oninput="dados[${i}].sexo=this.value">
+      <input type="text" placeholder="DD/MM/AAAA" inputmode="numeric" maxlength="10" id="e-nasc-${i}" value="${d.nascimento}"
+        oninput="dados[${i}].nascimento=mascararData(this)">
       <div class="url-col">
         <input type="text" placeholder="Cole a URL ou clique na imagem para upload..."  id="e-foto-${i}"    value="${d.foto}"
           oninput="dados[${i}].foto=this.value; atualizarPreview(${i})">
@@ -624,6 +647,14 @@
       </div>
     </div>`;
         }
+      }
+
+      function mascararData(input) {
+        let v = input.value.replace(/\D/g, "").slice(0, 8);
+        if (v.length > 4) v = `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
+        else if (v.length > 2) v = `${v.slice(0, 2)}/${v.slice(2)}`;
+        input.value = v;
+        return v;
       }
 
       function processarUpload(event, i) {
@@ -669,6 +700,7 @@
           dados[i].popular = document.getElementById(`e-popular-${i}`).value;
           dados[i].cientifico = document.getElementById(`e-cient-${i}`).value;
           dados[i].sexo = document.getElementById(`e-sexo-${i}`).value;
+          dados[i].nascimento = document.getElementById(`e-nasc-${i}`).value;
           dados[i].foto = document.getElementById(`e-foto-${i}`).value;
 
           const d = dados[i];
@@ -677,6 +709,8 @@
           if (fn) fn.textContent = d.nome;
           const fa = document.getElementById(`f-anilha-${i}`);
           if (fa) fa.textContent = d.anilha;
+          const fnasc = document.getElementById(`f-nasc-${i}`);
+          if (fnasc) fnasc.textContent = d.nascimento;
           const pp = document.getElementById(`fp-pop-${i}`);
           if (pp) pp.textContent = d.popular;
           const ps = document.getElementById(`fp-sci-${i}`);
@@ -725,7 +759,7 @@
             if (parsed.passaros && Array.isArray(parsed.passaros)) {
               for (let i = 0; i < NUM; i++) {
                 if (parsed.passaros[i]) {
-                  dados[i] = parsed.passaros[i];
+                  dados[i] = { nascimento: "", ...parsed.passaros[i] };
                 }
               }
             }
@@ -739,7 +773,7 @@
         document.getElementById("g-criador").value = "";
         document.getElementById("g-registro").value = "";
         for (let i = 0; i < NUM; i++) {
-          dados[i] = { nome: "", anilha: "", popular: "", cientifico: "", sexo: "", foto: "" };
+          dados[i] = { nome: "", anilha: "", popular: "", cientifico: "", sexo: "", nascimento: "", foto: "" };
         }
 
         localStorage.removeItem("plaquinhasData");
